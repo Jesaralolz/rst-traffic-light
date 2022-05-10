@@ -1,6 +1,5 @@
 function Activate_crosswalk () {
-    Number2 = 24
-    strip = neopixel.create(DigitalPin.P0, 3, NeoPixelMode.RGB)
+    Countdown = 24
     strip.setBrightness(255)
     range = strip.range(0, 1)
     range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -16,12 +15,12 @@ function Activate_crosswalk () {
             . # . # .
             # . . . #
             `)
-        Number2 += -1
+        Countdown += -1
         basic.pause(550)
     }
     for (let index = 0; index < 10; index++) {
-        basic.showNumber(Number2)
-        Number2 += -1
+        basic.showNumber(Countdown)
+        Countdown += -1
         basic.showLeds(`
             # . . . #
             . # . # .
@@ -29,7 +28,7 @@ function Activate_crosswalk () {
             . # . # .
             # . . . #
             `)
-        if (Number2 == 5) {
+        if (Countdown == 5) {
             strip.setBrightness(255)
             range = strip.range(0, 1)
             range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -38,27 +37,15 @@ function Activate_crosswalk () {
             range = strip.range(2, 1)
             range.showColor(neopixel.colors(NeoPixelColors.Black))
         }
-        if (Number2 == 3) {
-            strip.setBrightness(255)
-            range = strip.range(0, 1)
-            range.showColor(neopixel.colors(NeoPixelColors.Red))
-            range = strip.range(1, 1)
-            range.showColor(neopixel.colors(NeoPixelColors.Black))
-            range = strip.range(2, 1)
-            range.showColor(neopixel.colors(NeoPixelColors.Black))
+        if (Countdown == 3) {
+            Initial_Red()
         }
     }
+    Countdown = 0
 }
 function Sensor () {
-    pins.digitalWritePin(DigitalPin.P1, 0)
-    control.waitMicros(2)
-    pins.digitalWritePin(DigitalPin.P1, 1)
-    control.waitMicros(10)
-    pins.digitalWritePin(DigitalPin.P1, 0)
-    Distance = pins.pulseIn(DigitalPin.P0, PulseValue.High) / 58
-    basic.pause(2000)
-    if (Distance < 5) {
-        strip = neopixel.create(DigitalPin.P0, 3, NeoPixelMode.RGB)
+    let Distance = 0
+    if (Distance <= 5) {
         strip.setBrightness(255)
         range = strip.range(0, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -67,7 +54,6 @@ function Sensor () {
         range = strip.range(2, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Green))
         basic.pause(20000)
-        strip = neopixel.create(DigitalPin.P0, 3, NeoPixelMode.RGB)
         strip.setBrightness(255)
         range = strip.range(0, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -76,7 +62,6 @@ function Sensor () {
         range = strip.range(2, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Black))
         basic.pause(2000)
-        strip = neopixel.create(DigitalPin.P0, 3, NeoPixelMode.RGB)
         strip.setBrightness(255)
         range = strip.range(0, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Red))
@@ -85,10 +70,18 @@ function Sensor () {
         range = strip.range(2, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Black))
         basic.pause(2000)
+    } else {
+        strip.setBrightness(255)
+        range = strip.range(0, 1)
+        range.showColor(neopixel.colors(NeoPixelColors.Red))
+        range = strip.range(1, 1)
+        range.showColor(neopixel.colors(NeoPixelColors.Black))
+        range = strip.range(2, 1)
+        range.showColor(neopixel.colors(NeoPixelColors.Black))
     }
 }
 function Initial_Red () {
-    strip = neopixel.create(DigitalPin.P0, 3, NeoPixelMode.RGB)
+    strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
     strip.setBrightness(255)
     range = strip.range(0, 1)
     range.showColor(neopixel.colors(NeoPixelColors.Red))
@@ -103,16 +96,28 @@ function Initial_Red () {
         . # . # .
         # . . . #
         `)
+    radio.setGroup(1)
 }
 input.onButtonPressed(Button.A, function () {
     Activate_crosswalk()
+})
+function Emergency_vehicle () {
+    strip.setBrightness(255)
+    range = strip.range(0, 1)
+    range.showColor(neopixel.colors(NeoPixelColors.Red))
+    range = strip.range(1, 1)
+    range.showColor(neopixel.colors(NeoPixelColors.Black))
+    range = strip.range(2, 1)
+    range.showColor(neopixel.colors(NeoPixelColors.Black))
+}
+radio.onReceivedString(function (receivedString) {
+    Emergency_vehicle()
 })
 input.onButtonPressed(Button.B, function () {
     Activate_crosswalk_with_sound()
 })
 function Activate_crosswalk_with_sound () {
-    Number2 = 24
-    strip = neopixel.create(DigitalPin.P0, 3, NeoPixelMode.RGB)
+    Countdown = 12
     strip.setBrightness(255)
     range = strip.range(0, 1)
     range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -120,11 +125,11 @@ function Activate_crosswalk_with_sound () {
     range.showColor(neopixel.colors(NeoPixelColors.Black))
     range = strip.range(2, 1)
     range.showColor(neopixel.colors(NeoPixelColors.Green))
-    music.playTone(698, music.beat(BeatFraction.Half))
-    music.playTone(523, music.beat(BeatFraction.Whole))
-    music.playTone(698, music.beat(BeatFraction.Half))
-    music.playTone(523, music.beat(BeatFraction.Whole))
-    for (let index = 0; index < 14; index++) {
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(494, music.beat(BeatFraction.Whole))
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(494, music.beat(BeatFraction.Whole))
+    for (let index = 0; index < 7; index++) {
         basic.showLeds(`
             . . # . #
             . # # # .
@@ -132,12 +137,12 @@ function Activate_crosswalk_with_sound () {
             . # . # .
             # . . . #
             `)
-        Number2 += -1
+        Countdown += -1
         basic.pause(550)
     }
-    for (let index = 0; index < 10; index++) {
-        basic.showNumber(Number2)
-        Number2 += -1
+    for (let index = 0; index < 5; index++) {
+        basic.showNumber(Countdown)
+        Countdown += -1
         basic.showLeds(`
             # . . . #
             . # . # .
@@ -145,7 +150,7 @@ function Activate_crosswalk_with_sound () {
             . # . # .
             # . . . #
             `)
-        if (Number2 == 5) {
+        if (Countdown == 5) {
             strip.setBrightness(255)
             range = strip.range(0, 1)
             range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -154,22 +159,16 @@ function Activate_crosswalk_with_sound () {
             range = strip.range(2, 1)
             range.showColor(neopixel.colors(NeoPixelColors.Black))
         }
-        if (Number2 == 3) {
-            strip.setBrightness(255)
-            range = strip.range(0, 1)
-            range.showColor(neopixel.colors(NeoPixelColors.Red))
-            range = strip.range(1, 1)
-            range.showColor(neopixel.colors(NeoPixelColors.Black))
-            range = strip.range(2, 1)
-            range.showColor(neopixel.colors(NeoPixelColors.Black))
+        if (Countdown == 3) {
+            Initial_Red()
         }
     }
+    Countdown = 0
 }
-let Distance = 0
 let range: neopixel.Strip = null
 let strip: neopixel.Strip = null
-let Number2 = 0
+let Countdown = 0
 Initial_Red()
 basic.forever(function () {
-    Sensor()
+	
 })
