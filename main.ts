@@ -57,15 +57,33 @@ radio.onReceivedNumber(function (receivedNumber) {
     }
 })
 function Sensor () {
-    pins.digitalWritePin(DigitalPin.P1, 0)
+    pins.digitalWritePin(DigitalPin.P2, 0)
     control.waitMicros(2)
-    pins.digitalWritePin(DigitalPin.P1, 1)
+    pins.digitalWritePin(DigitalPin.P2, 1)
     control.waitMicros(10)
-    pins.digitalWritePin(DigitalPin.P1, 0)
-    Distance = pins.pulseIn(DigitalPin.P2, PulseValue.High) / 58
-    basic.showNumber(Distance)
-    basic.pause(2000)
-    if (Distance < 5.1) {
+    pins.digitalWritePin(DigitalPin.P2, 0)
+    Distance = pins.pulseIn(DigitalPin.P3, PulseValue.High) / 58
+}
+function Initial_Red () {
+    strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
+    strip.setBrightness(255)
+    range = strip.range(0, 1)
+    range.showColor(neopixel.colors(NeoPixelColors.Red))
+    range = strip.range(1, 1)
+    range.showColor(neopixel.colors(NeoPixelColors.Black))
+    range = strip.range(2, 1)
+    range.showColor(neopixel.colors(NeoPixelColors.Black))
+    basic.showLeds(`
+        # . . . #
+        . # . # .
+        . . # . .
+        . # . # .
+        # . . . #
+        `)
+    radio.setGroup(1)
+}
+function Distance_Sensor () {
+    if (Distance <= 5) {
         strip.setBrightness(255)
         range = strip.range(0, 1)
         range.showColor(neopixel.colors(NeoPixelColors.Black))
@@ -91,24 +109,6 @@ function Sensor () {
         range.showColor(neopixel.colors(NeoPixelColors.Black))
         basic.pause(2000)
     }
-}
-function Initial_Red () {
-    strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
-    strip.setBrightness(255)
-    range = strip.range(0, 1)
-    range.showColor(neopixel.colors(NeoPixelColors.Red))
-    range = strip.range(1, 1)
-    range.showColor(neopixel.colors(NeoPixelColors.Black))
-    range = strip.range(2, 1)
-    range.showColor(neopixel.colors(NeoPixelColors.Black))
-    basic.showLeds(`
-        # . . . #
-        . # . # .
-        . . # . .
-        . # . # .
-        # . . . #
-        `)
-    radio.setGroup(1)
 }
 input.onButtonPressed(Button.A, function () {
     Activate_crosswalk()
@@ -145,6 +145,10 @@ input.onButtonPressed(Button.B, function () {
 })
 function Activate_crosswalk_with_sound () {
     basic.pause(5000)
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(494, music.beat(BeatFraction.Whole))
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(494, music.beat(BeatFraction.Whole))
     basic.showLeds(`
         . . # . #
         . # # # .
@@ -152,10 +156,6 @@ function Activate_crosswalk_with_sound () {
         . # . # .
         # . . . #
         `)
-    music.playTone(523, music.beat(BeatFraction.Half))
-    music.playTone(494, music.beat(BeatFraction.Whole))
-    music.playTone(523, music.beat(BeatFraction.Half))
-    music.playTone(494, music.beat(BeatFraction.Whole))
     Countdown = 24
     strip.setBrightness(255)
     range = strip.range(0, 1)
@@ -206,9 +206,8 @@ let strip: neopixel.Strip = null
 let Countdown = 0
 Initial_Red()
 basic.forever(function () {
-    while (!(input.buttonIsPressed(Button.A) || input.buttonIsPressed(Button.B))) {
-        if (!(input.buttonIsPressed(Button.A) || input.buttonIsPressed(Button.B))) {
-            Sensor()
-        }
+    for (let index = 0; index < 10; index++) {
+        Sensor()
     }
+    Distance_Sensor()
 })
