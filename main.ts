@@ -4,12 +4,13 @@ radio.onReceivedNumber(function (receivedNumber) {
     }
 })
 function Sensor () {
-    pins.digitalWritePin(DigitalPin.P2, 0)
+    pins.digitalWritePin(DigitalPin.P1, 0)
     control.waitMicros(2)
-    pins.digitalWritePin(DigitalPin.P2, 1)
+    pins.digitalWritePin(DigitalPin.P1, 1)
     control.waitMicros(10)
-    pins.digitalWritePin(DigitalPin.P2, 0)
-    Distance = pins.pulseIn(DigitalPin.P3, PulseValue.High) / 58
+    pins.digitalWritePin(DigitalPin.P1, 0)
+    Distance = pins.pulseIn(DigitalPin.P2, PulseValue.High) / 58
+    basic.pause(2000)
 }
 function crosswalk () {
     basic.pause(5000)
@@ -47,10 +48,18 @@ function crosswalk () {
 function crosswalk_with_sound () {
     basic.pause(5000)
     Countdown = 24
+    music.playTone(880, music.beat(BeatFraction.Half))
+    music.playTone(698, music.beat(BeatFraction.Whole))
     music.playTone(523, music.beat(BeatFraction.Half))
-    music.playTone(494, music.beat(BeatFraction.Whole))
+    music.playTone(880, music.beat(BeatFraction.Half))
+    music.playTone(698, music.beat(BeatFraction.Whole))
     music.playTone(523, music.beat(BeatFraction.Half))
-    music.playTone(494, music.beat(BeatFraction.Whole))
+    music.playTone(880, music.beat(BeatFraction.Half))
+    music.playTone(698, music.beat(BeatFraction.Whole))
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(880, music.beat(BeatFraction.Half))
+    music.playTone(698, music.beat(BeatFraction.Whole))
+    music.playTone(523, music.beat(BeatFraction.Half))
     Green()
     for (let index = 0; index < 14; index++) {
         basic.showLeds(`
