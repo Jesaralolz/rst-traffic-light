@@ -96,10 +96,6 @@ input.onButtonPressed(Button.A, function () {
 function Distance_measure () {
     if (Distance <= 5) {
         Green()
-        basic.pause(24000)
-        Yellow()
-        basic.pause(3000)
-        Red()
     }
 }
 function Yellow () {
@@ -142,20 +138,20 @@ function Red () {
     range.showColor(neopixel.colors(NeoPixelColors.Black))
     range = strip.range(2, 1)
     range.showColor(neopixel.colors(NeoPixelColors.Black))
-    basic.showLeds(`
-        # . . . #
-        . # . # .
-        . . # . .
-        . # . # .
-        # . . . #
-        `)
-    radio.setGroup(1)
 }
 let range: neopixel.Strip = null
 let strip: neopixel.Strip = null
 let Countdown = 0
 let Distance = 0
 Red()
+basic.showLeds(`
+    # . . . #
+    . # . # .
+    . . # . .
+    . # . # .
+    # . . . #
+    `)
+radio.setGroup(1)
 basic.forever(function () {
     if (!(input.buttonIsPressed(Button.A)) || !(input.buttonIsPressed(Button.B))) {
         for (let index = 0; index < 10; index++) {
